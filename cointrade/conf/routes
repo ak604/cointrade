@@ -3,8 +3,6 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-# An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
 GET     /coinscore/topn             controllers.Coinscore.topn
 
 # Map static resources from the /public folder to the /assets URL path

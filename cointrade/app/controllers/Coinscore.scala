@@ -19,9 +19,11 @@ class Coinscore @Inject()(cc: ControllerComponents, val cal : Calc) extends Abst
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def topn() = Action { implicit request: Request[AnyContent] =>
+  def topn() = Action.async { implicit request: Request[AnyContent] =>
     val ret = cal.topN(3)
     implicit val ec: ExecutionContext = cc.executionContext
-    Ok("AS")
+    ret.map{f=>
+      Ok(f)
+    }
   }
 }

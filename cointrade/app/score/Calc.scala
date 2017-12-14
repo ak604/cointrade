@@ -5,50 +5,83 @@ import javax.inject._
 import services._
 import scala.concurrent.ExecutionContext
 import play.api.Logger
+import scala.concurrent.Future
+import scala.util._
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+import java.util.concurrent.TimeUnit
 
 @Singleton
-class Calc @Inject()(val coinPrice : CoinPrice, val ec: ExecutionContext) {
-  
-  
-  val weightByHour = Array(1,2,3,8,10,9,8,7,6,5,4,3,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
-  val interval=5;
-  def topN(n :Int)={
-    
-    val scoreMap: List[(String,Int)] = Nil
-    Coins.lst.take(1).foreach{coin=>
-      scoreMap++List(coin, score(coin))
-    }
-    scoreMap
-  }
-   
-  
-  def score(coin:String):Int={
-      
-     implicit val localec : ExecutionContext= ec
-    
-     val div:Int=60/interval;
-      val values = coinPrice.lastNHours(coin, 12, interval);
-      val normalizedx = values.map{lst =>
-        
-        val normalized=lst.zipWithIndex
-        .filter { case(value,i) => ((i+div)%div <5)  }
-        .map{ case(e,_)=> e}
-        .grouped(5)
-        .map{ lst5 => 
-          (lst5.sum/5)
-        }.toList
-        
-        val diff =normalized.drop(1).zip(normalized.dropRight(1)).map{
-          case(x,y) =>  Logger.debug(x +" "+y);((1000*(y-x))/x)
-        }
-        
-        
-      }
-      
-      
-      normalizedx.foreach{f =>
-       Logger.debug( f.mkString("-"))
-      }
-     5
-  }
+class Calc @Inject()(val coinPrice : CoinPrice) {
+
+	implicit val ec= ExecutionContext.global
+			def topN(n :Int)={
+					var futLst :List[Future[(String,Int)]]  = Nil
+							Coins.lst.take(100).foreach{coin=>
+							futLst=  futLst++List(score(coin))
+	}
+
+	val resFut = Future.sequence(futLst)
+			val result= resFut.map{lst=>
+			val  sorted =lst.sortBy{ case(coin,score) => score}
+			sorted.map{ case(coin,score) =>
+			Logger.debug( coin + "  => "+ score)
+			coin + "  => "+ score
+			}.mkString("\n")
+	}
+	result
+	}
+
+
+	def score(coin:String)={
+			val values = coinPrice.lastNHours(coin, 12, Calc.interval);
+			values.map{lst =>
+			Calc.buyScore(coin,lst)
+			}
+	}
+}
+
+object Calc{
+	    val interval=5
+			val weightByHour = Array(1,2,4,8,10,8,6,4,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+			val div:Int=60/interval
+			val normalizeCnt=5
+			val percentFactor =1000
+
+			def repalceZeroWithLastElement(lst : List[Int])={
+					lst.scan(0){case(x,y) =>
+					if(y==0) x else y
+					}.drop(1)
+			}
+			def normalize(lst:List[Int])={ 		
+					repalceZeroWithLastElement(lst).zipWithIndex
+					.filter { case(value,i) => ((i+div)%div < normalizeCnt)  }
+					.map{ case(e,_)=> e}
+					.grouped(normalizeCnt)
+					.map{ lst5 => 
+					(lst5.sum/lst5.length)
+					}.toList
+			}
+
+			def positiveHike(normalized:List[Int])={  	  
+					val hikes =normalized.dropRight(1).zip(normalized.drop(1)).map{
+					case(x,y) => ((Calc.percentFactor*(y-x))/x)
+					}
+					(hikes.reverse.span(hike=> hike>0 )._1)
+			}
+
+
+			def buyScore(coin:String,lst:List[Int])={
+
+					val normalized = normalize(lst)
+							val positiveHikes= positiveHike(normalized)
+							val nHours = positiveHikes.length;
+					var score=0
+							if(nHours>0){
+								val avgHike = (positiveHikes.sum )/ nHours
+										score = avgHike * weightByHour(nHours)
+							}
+					(coin,score)
+			}
+
 }
