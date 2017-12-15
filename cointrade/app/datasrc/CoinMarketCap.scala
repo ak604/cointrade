@@ -24,7 +24,7 @@ import play.api.Logger
 class CoinMarketCap  @Inject() (ws: WSClient , val ec: ExecutionContext )extends DataSrcTrait {
 
 	val baseUrl = "https://graphs.coinmarketcap.com/currencies/"
-			def priceInTimeRange( coin:String , startTime : Long, endTime : Long) : Future[List[Int]]={
+			def priceInTimeRange( coin:String , startTime : Long, endTime : Long) : Future[List[Long]]={
 					implicit val eclocal : ExecutionContext = ec
 	        val url= baseUrl + "/"+coin+"/"+startTime+"/"+endTime
 	        Logger.debug("JSON "+ url)
@@ -33,7 +33,7 @@ class CoinMarketCap  @Inject() (ws: WSClient , val ec: ExecutionContext )extends
 					val temp =(response.json \ "price_usd").get.as[JsArray].value.map{ ele =>
 					  ele.as[JsArray].value(1).as[Double]
 					}
-					temp.toList.map(f =>( f*100).toInt)
+					temp.toList.map(f =>( f*100).toLong)
 					}
 	}  
 }

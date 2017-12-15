@@ -7,10 +7,11 @@ import play.api.mvc._
 import javax.inject.Inject
 import score._
 import scala.concurrent.ExecutionContext
+import models._
 
 
 @Singleton
-class Coinscore @Inject()(cc: ControllerComponents, val cal : Calc) extends AbstractController(cc) {
+class CoinTransactions @Inject()(cc: ControllerComponents, val cal : Calc) extends AbstractController(cc) {
 
   /**
    * Create an Action to render an HTML page.
@@ -19,11 +20,10 @@ class Coinscore @Inject()(cc: ControllerComponents, val cal : Calc) extends Abst
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def topn() = Action.async { implicit request: Request[AnyContent] =>
-    val ret = cal.topN(3)
-    implicit val ec: ExecutionContext = cc.executionContext
-    ret.map{f=>
-      Ok(f)
-    }
+  def purchase( userId : Long,  coinId: String,  amount: Long,  unitPrice: Long, exchangeId:String)
+    = Action { implicit request: Request[AnyContent] =>
+      val userPurchase=new UserPurchase(userId,coinId,amount,unitPrice,exchangeId)
+      userPurchase.save()
+      Ok("saved")
   }
 }

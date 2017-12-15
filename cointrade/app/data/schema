@@ -1,0 +1,24 @@
+CREATE TABLE `user_purchases` (
+  `user_purchase_id` bigint(12) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(12) NOT NULL,
+  `coin_id` varchar(50) NOT NULL,
+  `amount` bigint(11) NOT NULL,
+  `unitprice` bigint(12) NOT NULL,
+  `exchange_id` varchar(50) DEFAULT NULL,
+  `timestamp` bigint(12),
+  `status` tinyint(1) DEFAULT '0',
+  `soft_deleted` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`user_purchase_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `coin_prices` (
+  `coin_price_id` bigint(12) NOT NULL AUTO_INCREMENT,
+  `coin_id` varchar(50) NOT NULL,
+  `price` bigint(12) NOT NULL,
+  `timestamp` bigint(12),
+  PRIMARY KEY (`coin_price_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `coin_prices` ADD UNIQUE `unique_index`(`coin_id`, `timestamp`);
