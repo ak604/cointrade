@@ -49,7 +49,8 @@ class Calc @Inject()(val coinPrice : CoinPriceService) {
 	    	val values = coinPrice.lastNHours(up.coinId, 48, Calc.interval,up.timestamp);
 	      values.map{ lst=>
 	     val sellScore =Calc.sellScore(lst,up.unitprice)
-	     val currentProfit = (1000*(lst.last - up.unitprice))/up.unitprice
+	     Logger.debug("xxx"+lst.mkString(","))
+	     val currentProfit = (100*(lst.last - up.unitprice))/up.unitprice
 	     up.coinId + " => " + up.amount+ " => "+
 	     up.exchangeId + " => " + up.timestamp+ " => " + up.unitprice + " => "+ sellScore +" => "+ currentProfit+"%"
 	    }
@@ -71,7 +72,7 @@ class Calc @Inject()(val coinPrice : CoinPriceService) {
 
 object Calc{
 	val interval=5
-			val weightByHour = Array(1,2,4,8,10,8,6,4,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+			val weightByHour = Array(1,2,4,8,10,8,6,4,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
 			val div:Long=60/interval
 			val normalizeCnt=5
 			val percentFactor =1000

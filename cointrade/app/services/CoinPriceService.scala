@@ -12,7 +12,7 @@ class CoinPriceService @Inject()(dataSrc : CoinTradeDB)  {
     
     val currTime = Calendar.getInstance().getTimeInMillis()/1000;
     
-    dataSrc.priceInTimeRange(coin,math.max( currTime-(nHours*3600),startTime), currTime)
+    dataSrc.priceInTimeRange(coin,math.max( (currTime-(nHours*3600)),startTime), currTime)
   }
   
 }

@@ -1,9 +1,10 @@
 package datasrc;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import models.CoinPrice;
-import play.api.Logger;
 
 public class JavaUtils {
 
@@ -12,28 +13,32 @@ public class JavaUtils {
 		List<Long> res = new ArrayList<Long>();
 		Iterator<CoinPrice> itr = coinPrices.iterator();
 		long tym=endTime;
-		long lastPrice=0;
+		CoinPrice lastCP=null;
 		CoinPrice  cp =null;
 		
 		if(itr.hasNext()) {
 			cp =itr.next();
-			lastPrice=cp.price;
+			lastCP=cp;
 			while(true) {
 				if(tym==cp.timestamp ) {
-					res.add(lastPrice);
+					res.add(lastCP.price);
 					if(itr.hasNext()) {
 						cp =itr.next();
-						lastPrice=cp.price;
+						lastCP=cp;
 					}
 					tym-=interval;
+				//	System.out.println("XX" + tym + "  "+cp.timestamp+ "  "+lastCP.price);
 				}else if(cp.timestamp<tym || !itr.hasNext()) {
-					res.add(lastPrice);
-					lastPrice=cp.price;
+					res.add(lastCP.price);
+					lastCP=cp;
 					tym-=interval;
+					//System.out.println("YY" + tym + "  "+cp.timestamp+ "  "+lastCP.price);
 				}else {
 					if(itr.hasNext()) {
 						cp =itr.next();	
+						
 					}
+					//System.out.println(cp.price+"ZZ" + tym + "  "+cp.timestamp+ "  "+lastCP.price);
 				}
 				if(tym<startTime)
 					break;
