@@ -6,7 +6,7 @@ pricemul=1000000
 def dbconnect():
     try:
         db = MySQLdb.connect(
-            host='localhost',
+            host='cointrade.cq3ccmglzjnt.us-east-2.rds.amazonaws.com',
             user='cointrade',
             passwd='cointrade',
             db='cointrade'
