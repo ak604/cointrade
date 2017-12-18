@@ -35,7 +35,8 @@ public class CoinPrice extends Model {
 	   .ge("timestamp", startTime)
 	   .le("timestamp", endTime)
 	   .eq("coin_id", coinId)
-       .orderBy("timestamp asc")
+       .orderBy("timestamp desc")
       .findList();
    }
+   
 }

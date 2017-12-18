@@ -16,6 +16,7 @@ import scala.collection.JavaConverters._
 import scala.collection.immutable.Range
 import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConversions.asScalaBuffer
+import constants._
 
 @Singleton
 class Calc @Inject()(val coinPrice : CoinPriceService) {
@@ -46,10 +47,9 @@ class Calc @Inject()(val coinPrice : CoinPriceService) {
 	  
 	  val lst : List[UserPurchase]= asScalaBuffer(UserPurchase.allBought()).toList
 	  val futLst =lst.map{up=>
-	    	val values = coinPrice.lastNHours(up.coinId, 48, Calc.interval,up.timestamp);
+	    	val values = coinPrice.lastNHours(up.coinId, 48, AppConstants.granularity,up.timestamp);
 	      values.map{ lst=>
 	     val sellScore =Calc.sellScore(lst,up.unitprice)
-	     Logger.debug("xxx"+lst.mkString(","))
 	     val currentProfit = (100*(lst.last - up.unitprice))/up.unitprice
 	     up.coinId + " => " + up.amount+ " => "+
 	     up.exchangeId + " => " + up.timestamp+ " => " + up.unitprice + " => "+ sellScore +" => "+ currentProfit+"%"
@@ -63,7 +63,7 @@ class Calc @Inject()(val coinPrice : CoinPriceService) {
 	}
 
 	def score(coin:String)={
-			val values = coinPrice.lastNHours(coin, 18, Calc.interval,0);
+			val values = coinPrice.lastNHours(coin, 18, AppConstants.granularity,0);
 			values.map{lst =>
 			(coin,Calc.buyScore(lst))
 			}
@@ -71,9 +71,8 @@ class Calc @Inject()(val coinPrice : CoinPriceService) {
 }
 
 object Calc{
-	val interval=5
 			val weightByHour = Array(1,2,4,8,10,8,6,4,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
-			val div:Long=60/interval
+			val div:Long=3600/AppConstants.granularity
 			val normalizeCnt=5
 			val percentFactor =1000
 			val toleranceFactor =2

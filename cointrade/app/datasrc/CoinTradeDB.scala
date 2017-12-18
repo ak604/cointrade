@@ -34,7 +34,7 @@ class CoinTradeDB  extends DataSrcTrait {
 					val result =Future{
 						asScalaBuffer(CoinPrice.valuesBetween(coin,startTime,endTime)).toList
 					}
-					
+				
 					result.map{ lst =>
 					 CoinTradeDB.fillMissingValues(lst.reverse,startTime,endTime).reverse
 			  }

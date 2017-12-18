@@ -4,7 +4,7 @@
 # ~~~~
 
 GET     /coinscore/topn             controllers.CoinScore.topn
-GET     /cointrans/purchase         controllers.CoinTransactions.purchase( userId : Long,  coinId: String,  amount: Long,  unitprice: Long, exchangeId:String)
+GET     /cointrans/purchase         controllers.CoinTransactions.purchase( userId : Long,  coinId: String,  amount: Long=0,  unitprice: Long=0, exchangeId:String="bittrex")
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

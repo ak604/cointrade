@@ -1,8 +1,0 @@
-run
-compile
-cd ..
-run
-exit
-run
-cd coin
-exit
