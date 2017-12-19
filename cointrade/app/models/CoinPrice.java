@@ -8,7 +8,6 @@ import javax.persistence.Table;
 
 import io.ebean.Finder;
 import io.ebean.Model;
-import play.Logger;
 
 @Entity
 @Table(name="coin_prices")
@@ -35,7 +34,7 @@ public class CoinPrice extends Model {
 	   .ge("timestamp", startTime)
 	   .le("timestamp", endTime)
 	   .eq("coin_id", coinId)
-       .orderBy("timestamp desc")
+       .orderBy("timestamp asc")
       .findList();
    }
    

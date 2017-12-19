@@ -34,7 +34,7 @@ class CalcSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
    "Calc.buyScoreGiveHikes" should { "calculates scores correctly" in { 
       assert(Calc.buyScoreGivenHikes(Calc.positiveHike(List(1,2,4,8)))==Calc.percentFactor* Calc.weightByHour(2))
       if(Calc.toleranceFactor>0)
-         assert(Calc.buyScoreGivenHikes(Calc.positiveHike(List(1,2,4,4)))==2666)
+         assert(Calc.buyScoreGivenHikes(Calc.positiveHike(List(1,2,4,4)))==(2*Calc.percentFactor*Calc.weightByHour(2))/3)
        else
           assert(Calc.buyScoreGivenHikes(Calc.positiveHike(List(1,2,4,4)))==0)
       assert(Calc.buyScoreGivenHikes(Calc.positiveHike(List(1,2,4,2)))==0)

@@ -7,12 +7,13 @@ import play.api.test.Helpers._
 import scala.collection.immutable.Range
 import models._
 import score._
+import constants._
 
 class CoinTradeDBSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
  
   "CoinTradeDBSpec.filterConsecutive" should { "filters only consecutive elements" in {
     var lst : List[CoinPrice] = List()
-    val interval = Calc.interval*60
+    val interval = AppConstants.granularity
     val rng = Range(5,10).reverse
     rng.foreach{ f=>
       lst = lst++List(new CoinPrice(1,"bitcoin",f,30000+f*interval))
@@ -29,7 +30,7 @@ class CoinTradeDBSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
   
   "CoinTradeDBSpec.filterConsecutive" should { "filters out non-cosecutive elements" in {
     var lst : List[CoinPrice] = List()
-    val interval = Calc.interval*60
+    val interval = AppConstants.granularity
     val rng = Range(5,10).reverse
     rng.foreach{ f=>
       lst = lst++List(new CoinPrice(1,"bitcoin",f,30000+f*interval))
@@ -45,7 +46,7 @@ class CoinTradeDBSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
   
    "CoinTradeDBSpec.fillMissingValues" should { "fills missing data" in {
     var lst : List[CoinPrice] = List()
-    val interval = Calc.interval*60
+    val interval = AppConstants.granularity
     val rng = Range(5,10).reverse
     rng.foreach{ f=>
       lst = lst++List(new CoinPrice(1,"bitcoin",f,30000+f*interval))
@@ -59,7 +60,7 @@ class CoinTradeDBSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
    
     "CoinTradeDBSpec.fillMissingValues" should { " ignore extra data" in {
     var lst : List[CoinPrice] = List()
-    val interval = Calc.interval*60
+    val interval =AppConstants.granularity
     val rng = Range(5,10).reverse
     rng.foreach{ f=>
       lst = lst++List(new CoinPrice(1,"bitcoin",f,30000+f*interval))

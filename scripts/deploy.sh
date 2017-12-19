@@ -1,0 +1,1 @@
+sudo rm -rf /opt/games/cointrade* ; ls -rt  | grep zip | tail -1 | sudo xargs unzip  -d /opt/games/ ;  curr=$(ls -rt  | grep zip | tail -1 | awk '{ print substr($1,1,length($1)-4)}'); sudo rm -rf /opt/games/cointrade; sudo ln -s '/opt/games/'$curr /opt/games/cointrade

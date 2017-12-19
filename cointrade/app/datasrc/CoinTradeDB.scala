@@ -25,6 +25,7 @@ import scala.collection.JavaConverters._
 import scala.collection.immutable.Range
 import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConversions.asScalaBuffer
+import constants._
 
 @Singleton
 class CoinTradeDB  extends DataSrcTrait {
@@ -33,8 +34,8 @@ class CoinTradeDB  extends DataSrcTrait {
 			def priceInTimeRange( coin:String , startTime : Long, endTime : Long) : Future[List[Long]]={
 					val result =Future{
 						asScalaBuffer(CoinPrice.valuesBetween(coin,startTime,endTime)).toList
+						
 					}
-				
 					result.map{ lst =>
 					 CoinTradeDB.fillMissingValues(lst.reverse,startTime,endTime).reverse
 			  }
@@ -43,16 +44,13 @@ class CoinTradeDB  extends DataSrcTrait {
 
 object CoinTradeDB {
   
-    val interval =300
-   
     def normalize(tym : Long)={
-      tym- tym%interval
+      tym- tym%AppConstants.granularity
     }
     def fillMissingValues(lst :List[CoinPrice],startTime:Long, endTime: Long):List[Long]={
       val stTime= normalize(startTime)
       val enTime= normalize(endTime)
-      val total = (enTime-stTime)%interval+1
-      asScalaBuffer(JavaUtils.fillMissing(lst.asJava, stTime, enTime, interval)).toList.map{f => 
+      asScalaBuffer(JavaUtils.fillMissing(lst.asJava, stTime, enTime, AppConstants.granularity)).toList.map{f => 
         val lng:Long=f;
         lng
       }
@@ -60,8 +58,8 @@ object CoinTradeDB {
     
     def filterConsecutive(lst :List[CoinPrice],endTime: Long) = {
        lst.zipWithIndex.takeWhile{ case(coinPrice,index) =>
-			       val last = endTime - endTime%CoinTradeDB.interval
-			       val expectedTimeStamp = last - interval*index
+			       val last = endTime - endTime%AppConstants.granularity
+			       val expectedTimeStamp = last - AppConstants.granularity*index
    			       expectedTimeStamp ==coinPrice.timestamp
 			     }
 			     .map{ f => 
