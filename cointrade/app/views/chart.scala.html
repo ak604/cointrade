@@ -1,0 +1,39 @@
+@(coin: String )
+<!doctype html>
+<html>
+
+<head>
+    <title>@coin</title>
+   <meta http-equiv="Content-Security-Policy" content=
+   "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' 'sha256-O2qVmjpoa6+8RHGUsQF6gBE1a7m3lejCx9L0t4Ercgc=' 'sha256-WUouw3w7AifYiNnShudSwTX2L7JMqbmlaPv5ofNnVdg='">
+	
+   <script  src= '@routes.Assets.versioned("javascripts/Chart.bundle.js")' type='text/javascript'></script>
+   <script  src= '@routes.Assets.versioned("javascripts/utils.js")' type='text/javascript'></script>
+    <script  src= '@routes.Assets.versioned("javascripts/jquery-3.2.1.min.js")' type='text/javascript'></script>
+    <script  src= '@routes.Assets.versioned("javascripts/chartx.js")' type='text/javascript'></script>
+    <style>
+    canvas{
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+    </style>
+</head>
+
+<body>
+    <div style="width:75%;">
+        <canvas id="canvas"></canvas>
+    </div>
+    <br>
+    <br>
+    <button id="randomizeData">Randomize Data</button>
+    <button id="addDataset">Add Dataset</button>
+    <button id="removeDataset">Remove Dataset</button>
+    <button id="addData">Add Data</button>
+    <button id="removeData">Remove Data</button>
+  
+</body>
+
+</html>
+
+

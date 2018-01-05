@@ -24,7 +24,7 @@ class Calc @Inject()(val coinPrice : CoinPriceService) {
 	implicit val ec= ExecutionContext.global
 			def topN(n :Int)={
 					var futLst :List[Future[(String,Long)]]  = Nil
-							Coins.lst.take(100).foreach{coin=>
+							Coins.lst.take(n).foreach{coin=>
 							futLst=  futLst++List(score(coin))
 	}
 
@@ -32,16 +32,11 @@ class Calc @Inject()(val coinPrice : CoinPriceService) {
 			val result= resFut.map{lst=>
 			val  sorted =lst.sortBy{ case(coin,score) => score}
 			sorted.reverse.map{ case(coin,score) =>
-			coin + "  => "+ score
-			}.mkString("\n")
+			  CoinBuyScore(coin,score)
+			}
 	}
-	
-  val sellFut = sellScore()
- sellFut.zipWith(result){case(x,y) =>
-   x +"\n"+y
+	result
  }
-
-	}
 
 	def sellScore()={
 	  
@@ -71,11 +66,11 @@ class Calc @Inject()(val coinPrice : CoinPriceService) {
 }
 
 object Calc{
-			val weightByHour = Array(2,4,8,12,8,8,4,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+			val weightByHour = Array(4,8,12,8,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
 			val div:Long=AppConstants.blocks/AppConstants.granularity
-			val normalizeCnt=3
+			val normalizeCnt=2
 			val percentFactor =1000
-			val toleranceFactor =2
+			val toleranceFactor =20
 			
 			val tolProfit=40
 			val tolLoss=20

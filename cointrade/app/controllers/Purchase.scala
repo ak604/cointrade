@@ -10,7 +10,7 @@ import scala.concurrent.ExecutionContext
 
 
 @Singleton
-class CoinScore @Inject()(cc: ControllerComponents, val calc : Calc) extends AbstractController(cc) {
+class Purchase @Inject()(cc: ControllerComponents, val calc : Calc) extends AbstractController(cc) {
 
   /**
    * Create an Action to render an HTML page.
@@ -19,8 +19,8 @@ class CoinScore @Inject()(cc: ControllerComponents, val calc : Calc) extends Abs
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def topn() = Action.async { implicit request: Request[AnyContent] =>
-    val ret = calc.topN(100)
+  def userPurchases(userId: String) = Action.async { implicit request: Request[AnyContent] =>
+   val ret = calc.sellScore()
     implicit val ec: ExecutionContext = cc.executionContext
     ret.map { value =>
       Ok(value.mkString("\n").toString());
