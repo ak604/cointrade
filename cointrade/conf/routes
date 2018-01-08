@@ -8,7 +8,9 @@ GET     /cointrans/purchase         controllers.CoinTransactions.purchase( userI
 GET     /chart/price                controllers.Chart.price( coinId: String)
 GET     /chart/priceJson            controllers.Chart.priceJson( coinId: String)
 GET     /home/index                 controllers.Home.index( userId: String)
-GET     /user/purchases     controllers.Purchase.userPurchases( userId: String)
+GET     /user/purchases    		    controllers.Purchase.userPurchases( userId: String)
+
+GET     /markets/refreshMarkets     controllers.Markets.refreshMarkets()
 
 
 # Map static resources from the /public folder to the /assets URL path

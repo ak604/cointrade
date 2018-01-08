@@ -11,6 +11,15 @@ create table coin_prices (
   constraint pk_coin_prices primary key (coin_price_id)
 );
 
+create table markets (
+  market_name                   varchar(255) not null,
+  market_currency               varchar(255),
+  base_currency                 varchar(255),
+  min_trade_size                double,
+  is_active                     tinyint(1) default 0,
+  constraint pk_markets primary key (market_name)
+);
+
 create table user_purchases (
   user_purchase_id              bigint auto_increment not null,
   user_id                       bigint,
@@ -27,6 +36,8 @@ create table user_purchases (
 # --- !Downs
 
 drop table if exists coin_prices;
+
+drop table if exists markets;
 
 drop table if exists user_purchases;
 

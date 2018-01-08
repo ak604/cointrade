@@ -26,7 +26,7 @@ CREATE TABLE `markets` (
   `market_currency` varchar(50) NOT NULL,
   `base_currency` varchar(50) NOT NULL,
   `min_trade_size` double NOT NULL,
-  `isActive` tinyint(1),
+  `is_active` tinyint(1),
   PRIMARY KEY (`market_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
