@@ -31,9 +31,9 @@ import constants._
 class CoinTradeDB  extends DataSrcTrait {
 
 	    implicit val ec= ExecutionContext.global
-			def priceInTimeRange( coin:String , startTime : Long, endTime : Long) : Future[List[Long]]={
+			def priceInTimeRange( market:String , startTime : Long, endTime : Long) : Future[List[Double]]={
 					val result =Future{
-						asScalaBuffer(CoinPrice.valuesBetween(coin,startTime,endTime)).toList
+						asScalaBuffer(MarketPrice.valuesBetween(market,startTime,endTime)).toList
 						
 					}
 					result.map{ lst =>
@@ -47,23 +47,23 @@ object CoinTradeDB {
     def normalize(tym : Long)={
       tym- tym%AppConstants.granularity
     }
-    def fillMissingValues(lst :List[CoinPrice],startTime:Long, endTime: Long):List[Long]={
+    def fillMissingValues(lst :List[MarketPrice],startTime:Long, endTime: Long):List[Double]={
       val stTime= normalize(startTime)
       val enTime= normalize(endTime)
       asScalaBuffer(JavaUtils.fillMissing(lst.asJava, stTime, enTime, AppConstants.granularity)).toList.map{f => 
-        val lng:Long=f;
+        val lng:Double=f;
         lng
       }
     }
     
-    def filterConsecutive(lst :List[CoinPrice],endTime: Long) = {
+    def filterConsecutive(lst :List[MarketPrice],endTime: Long) = {
        lst.zipWithIndex.takeWhile{ case(coinPrice,index) =>
 			       val last = endTime - endTime%AppConstants.granularity
 			       val expectedTimeStamp = last - AppConstants.granularity*index
    			       expectedTimeStamp ==coinPrice.timestamp
 			     }
 			     .map{ f => 
-			      val lng: Long =f._1.price;
+			      val lng: Double =f._1.getPrice();
 			      lng
 			    }
     }

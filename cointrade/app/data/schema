@@ -32,4 +32,17 @@ CREATE TABLE `markets` (
 
 
 
+CREATE TABLE `market_prices` (
+  `market_price_id` bigint(12) NOT NULL AUTO_INCREMENT,
+  `market_name` varchar(50) NOT NULL,
+  `bid` double NOT NULL,
+  `ask` double NOT NULL,
+  `last` double NOT NULL,
+  `timestamp` bigint(12) DEFAULT NULL,
+  PRIMARY KEY (`market_price_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+ALTER TABLE `market_prices` ADD UNIQUE `unique_index`(`market_name`, `timestamp`);
+
+
 ALTER TABLE `coin_prices` ADD UNIQUE `unique_index`(`coin_id`, `timestamp`);

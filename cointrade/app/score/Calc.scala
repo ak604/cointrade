@@ -19,30 +19,14 @@ import scala.collection.JavaConversions.asScalaBuffer
 import constants._
 
 @Singleton
-class Calc @Inject()(val coinPrice : CoinPriceService) {
+class Calc @Inject()(val marketPrice : MarketPriceService,val marketService : MarketService) {
 
-	implicit val ec= ExecutionContext.global
-			def topN(n :Int)={
-					var futLst :List[Future[(String,Long)]]  = Nil
-							Coins.lst.take(n).foreach{coin=>
-							futLst=  futLst++List(score(coin))
-	}
-
-	val resFut = Future.sequence(futLst)
-			val result= resFut.map{lst=>
-			val  sorted =lst.sortBy{ case(coin,score) => score}
-			sorted.reverse.map{ case(coin,score) =>
-			  CoinBuyScore(coin,score)
-			}
-	}
-	result
- }
-
+  implicit val ec= ExecutionContext.global
 	def sellScore()={
-	  
+	 
 	  val lst : List[UserPurchase]= asScalaBuffer(UserPurchase.allBought()).toList
 	  val futLst =lst.map{up=>
-	    	val values = coinPrice.lastNBlocks(up.coinId, 48,up.timestamp);
+	    	val values = marketPrice.lastNBlocks(up.coinId, 48,up.timestamp);
 	      values.map{ lst=>
 	     val sellScore =Calc.sellScore(lst,up.unitprice)
 	     val currentProfit = (100*(lst.last - up.unitprice))/up.unitprice
@@ -58,7 +42,7 @@ class Calc @Inject()(val coinPrice : CoinPriceService) {
 	}
 
 	def score(coin:String)={
-			val values = coinPrice.lastNBlocks(coin, 18,0);
+			val values = marketPrice.lastNBlocks(coin, 18,0);
 			values.map{lst =>
 			(coin,Calc.buyScore(lst))
 			}
@@ -75,18 +59,18 @@ object Calc{
 			val tolProfit=40
 			val tolLoss=20
 
-			def percent(first:Long, second:Long)={
+			def percent(first:Double, second:Double)={
 	      ((first-second)*Calc.percentFactor)/second
 	    }
-			def repalceZeroWithLastElement(lst : List[Long]):List[Long]={
-					lst.scanLeft(0L){(x,y) =>
+			def repalceZeroWithLastElement(lst : List[Double]):List[Double]={
+					lst.scanLeft(0.0){(x,y) =>
 					  val xx=x
 					  val yy=y
 					if(y==0) x else y
 					}.drop(1)
 			}
 	
-			def normalize(lst:List[Long])={ 		
+			def normalize(lst:List[Double])={ 		
 					val x =repalceZeroWithLastElement(lst).zipWithIndex
 					x.filter { case(value,i) => ((i+div)%div < normalizeCnt)  }
 					.map{ case(e,_)=> e}
@@ -96,7 +80,7 @@ object Calc{
 					}.toList
 			}
 
-			def positiveHike(normalized:List[Long])={  	  
+			def positiveHike(normalized:List[Double])={  	  
 					val hikes =normalized.dropRight(1).zip(normalized.drop(1)).map{
 					case(x,y) => ((Calc.percentFactor*(y-x))/x)
 					}
@@ -105,18 +89,18 @@ object Calc{
 			}
 
 
-			def buyScore(lst:List[Long])={
+			def buyScore(lst:List[Double])={
 					val normalized= normalize(lst)
 							val positiveHikes= positiveHike(normalized)
 					buyScoreGivenHikes(positiveHikes)
 			}
 			
-			def buyScoreGivenHikes(positiveHikes:List[Long])={
+			def buyScoreGivenHikes(positiveHikes:List[Double])={
 			  	val nHours = positiveHikes.length
 				if(nHours>0){(positiveHikes.sum * weightByHour(nHours-1) )/ nHours}else 0
 			}
 			
-			def sellScore(lst: List[Long], unitprice:Long)={
+			def sellScore(lst: List[Double], unitprice:Double)={
 			   val localMax=lst.max
 	      val currentPrice= lst.last
 	      
@@ -130,3 +114,4 @@ object Calc{
 			}
 
 }
+

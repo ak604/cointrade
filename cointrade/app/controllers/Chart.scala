@@ -12,15 +12,12 @@ import play.api.libs.json._
 
 
 @Singleton
-class Chart @Inject()(cc: ControllerComponents, val coinPriceService : CoinPriceService) extends AbstractController(cc) {
+class Chart @Inject()(cc: ControllerComponents, val marketPriceService : MarketPriceService) extends AbstractController(cc) {
   
   implicit val ec: ExecutionContext = cc.executionContext
-  def price(coin:String) = Action { implicit request: Request[AnyContent] =>
-     Ok(views.html.chart(coin))
-  }
   
-   def priceJson(coin:String) = Action.async { implicit request: Request[AnyContent] =>
-     val prices= coinPriceService.lastNBlocks(coin, 18, 0)
+   def prices(market:String) = Action.async { implicit request: Request[AnyContent] =>
+     val prices= marketPriceService.lastNBlocks(market, 18, 0)
      val ret= prices.map{ lst=>
        Json.toJson(lst)
      }

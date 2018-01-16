@@ -23,5 +23,13 @@ class MarketService @Inject()(dataSrc : Bittrex)  {
       }
       "OK"
     }
-  }  
+  } 
+  
+  def getMarkets()={
+    dataSrc.getMarkets().map{ lst=>
+      lst.map{value=>
+        value.marketName
+      }
+    }
+  }
 }

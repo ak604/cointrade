@@ -49,5 +49,7 @@ class Bittrex  @Inject() (ws: WSClient , val ec: ExecutionContext ) {
 					temp.toList.map{ value => new Market(value.MarketName,value.MarketCurrency, value.BaseCurrency, value.MinTradeSize, value.IsActive) 
 					}
 	}
-	}  
+	}
+  
+  
 }

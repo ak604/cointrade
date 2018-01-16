@@ -15,12 +15,10 @@ class CalcSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
   }
   
    "Calc.normalize" should { "normalizes into hours values" in {
-      assert( Calc.normalize(Range.Long(1, Calc.div+1,1).toList)==List( (Range.Long(1,Calc.normalizeCnt+1,1).sum) /Calc.normalizeCnt))
-      assert(Calc.normalize(Range.Long(1,Calc.div,1).toList)==List( (Range(1,Calc.normalizeCnt+1).sum) /Calc.normalizeCnt))
-      assert(Calc.normalize(Range.Long(1,Calc.div+2,1).toList)==List( (Range.Long(1,Calc.normalizeCnt+1,1).sum) /Calc.normalizeCnt, Calc.div+1))
-      assert(Calc.normalize(Range.Long(1,3,1).toList)==List(1))
-      assert(Calc.normalize(Range.Long(1,4,1).toList)==List(2))
-    }
+      assert( Calc.normalize(Range.Double(1, Calc.div+1,1).toList)==List( (Range.Double(1,Calc.normalizeCnt+1,1).sum) /Calc.normalizeCnt))
+      assert(Calc.normalize(Range.Double(1,Calc.div,1).toList)==List( (Range.Double(1,Calc.normalizeCnt+1,1).sum) /Calc.normalizeCnt))
+      assert(Calc.normalize(Range.Double(1,Calc.div+2,1).toList)==List( (Range.Double(1,Calc.normalizeCnt+1,1).sum) /Calc.normalizeCnt, Calc.div+1))
+     }
    }
    
   "Calc.positiveHike" should { "calculates hike values" in { 
@@ -38,7 +36,7 @@ class CalcSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
        else
           assert(Calc.buyScoreGivenHikes(Calc.positiveHike(List(1,2,4,4)))==0)
       assert(Calc.buyScoreGivenHikes(Calc.positiveHike(List(1,2,4,2)))==0)
-      assert(Calc.buyScoreGivenHikes(Calc.positiveHike(List(95,96,97,98,99)))== Calc.percentFactor* Calc.weightByHour(3)/100) 
+      assert(Calc.buyScoreGivenHikes(Calc.positiveHike(List(95,96,97,98,99)))== 1.0*Calc.percentFactor* Calc.weightByHour(3)/100) 
       assert(Calc.buyScoreGivenHikes(Calc.positiveHike(List(95,98,95,98,99)))== Calc.percentFactor*41* Calc.weightByHour(1)/2000)
         
      }

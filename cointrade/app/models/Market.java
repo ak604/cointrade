@@ -38,7 +38,7 @@ public class Market extends Model {
     }
     public static List<Market> allActiveMarkets(String coinId,Long startTime, Long endTime) {
 	  return find.query().where()
-	   .eq("isActive", true)
+	   .eq("is_active", true)
       .findList();
    }
     

@@ -20,12 +20,22 @@ create table markets (
   constraint pk_markets primary key (market_name)
 );
 
+create table market_prices (
+  market_price_id               bigint auto_increment not null,
+  market_name                   varchar(255),
+  bid                           double,
+  ask                           double,
+  last                          double,
+  timestamp                     bigint,
+  constraint pk_market_prices primary key (market_price_id)
+);
+
 create table user_purchases (
   user_purchase_id              bigint auto_increment not null,
   user_id                       bigint,
   coin_id                       varchar(255),
-  amount                        bigint,
-  unitprice                     bigint,
+  amount                        double,
+  unitprice                     double,
   exchange_id                   varchar(255),
   timestamp                     bigint,
   status                        integer,
@@ -38,6 +48,8 @@ create table user_purchases (
 drop table if exists coin_prices;
 
 drop table if exists markets;
+
+drop table if exists market_prices;
 
 drop table if exists user_purchases;
 

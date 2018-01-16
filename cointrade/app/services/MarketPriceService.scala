@@ -8,10 +8,10 @@ import play.api.Logger
 import constants._
 
 @Singleton
-class CoinPriceService @Inject()(dataSrc : CoinTradeDB)  {
+class MarketPriceService @Inject()(dataSrc : CoinTradeDB)  {
   
   implicit val ec= ExecutionContext.global
-  def lastNBlocks(coin:String, nBlocks : Int,startTime:Long):Future[List[Long]]={
+  def lastNBlocks(coin:String, nBlocks : Int,startTime:Long):Future[List[Double]]={
     val currTime = Calendar.getInstance().getTimeInMillis()/1000;
     dataSrc.priceInTimeRange(coin,math.max( (currTime-(nBlocks*AppConstants.blocks)),startTime), currTime)
   }

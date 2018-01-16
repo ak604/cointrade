@@ -22,7 +22,7 @@ public class CoinPrice extends Model {
     
    public static final Finder<Long, CoinPrice> find = new Finder<>(CoinPrice.class);
     
-   public CoinPrice( Long userId, String coinId,  Long price,  Long timestamp) {
+   public CoinPrice(String coinId,  Long price,  Long timestamp) {
 	   this.coinId=coinId;
 	   this.timestamp= timestamp;
 	   this.price=price;

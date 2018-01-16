@@ -22,8 +22,8 @@ public class UserPurchase extends Model {
 
     public Long UserId;
     public String coinId;
-    public Long amount;
-    public Long unitprice;
+    public Double amount;
+    public Double unitprice;
     public String exchangeId;
     public Long timestamp;
     public Integer status;
@@ -31,7 +31,7 @@ public class UserPurchase extends Model {
     
    public static final Finder<Long, UserPurchase> find = new Finder<>(UserPurchase.class);
     
-   public UserPurchase( Long userId, String coinId,  Long amount,  Long unitprice, String exchangeId) {
+   public UserPurchase( Long userId, String coinId,  Double amount,  Double unitprice, String exchangeId) {
 	   this.UserId=userId;
 	   this.coinId=coinId;
 	   this.amount=amount;

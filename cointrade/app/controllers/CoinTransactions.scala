@@ -14,7 +14,7 @@ import constants._
 
 
 @Singleton
-class CoinTransactions @Inject()(cc: ControllerComponents, val coinPriceService : CoinPriceService) extends AbstractController(cc) {
+class CoinTransactions @Inject()(cc: ControllerComponents, val coinPriceService : MarketPriceService) extends AbstractController(cc) {
 
   /**
    * Create an Action to render an HTML page.
@@ -23,7 +23,7 @@ class CoinTransactions @Inject()(cc: ControllerComponents, val coinPriceService 
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def purchase( userId : Long,  coinId: String,  amount: Long,  unitprice: Long, exchangeId:String)
+  def purchase( userId : Long,  coinId: String,  amount: Double,  unitprice: Double, exchangeId:String)
     = Action { implicit request: Request[AnyContent] =>
       
       implicit val ExecutionContext = cc.executionContext
