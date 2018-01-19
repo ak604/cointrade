@@ -15,6 +15,8 @@ EclipseKeys.preTasks := Seq(compile in Compile, compile in Test)
 libraryDependencies += javaJdbc
 libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.41"
 libraryDependencies += jdbc
-libraryDependencies += "com.typesafe.play" %% "anorm" % "2.5.3"
+libraryDependencies += "com.typesafe.play" %% "anorm" % "2.5.3" withSources()
+libraryDependencies += "org.mockito" % "mockito-core" % "2.12.0" % Test
+
 lazy val myProject = (project in file("."))
   .enablePlugins(PlayJava, PlayEbean)

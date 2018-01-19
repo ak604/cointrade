@@ -10,14 +10,16 @@ import scala.util._
 class ScoreService @Inject()(val marketService : MarketService, val calc : Calc)
 {
   implicit val ec= ExecutionContext.global
- 
+  implicit val buyScoreWrite = Json.writes[BuyScore]
   def scoresJson()={
       marketService.getMarkets().flatMap{lst=>  
        val futList =   lst.map(market=>calc.score(market))
          val listOfFutureTrys = futList.map(FutureUtils.futureToFutureTry(_))
          Future.sequence(listOfFutureTrys).map{ lst=>
          lst.filter(x=> x.isSuccess).collect{case Success(x) =>x}
-         }.map(Json.toJson(_))
-   }
-}
+         }.map{ lst=>
+            Json.toJson(lst.map{ buyScore=>Json.toJson(buyScore)})
+            }
+  }
+  }
 }

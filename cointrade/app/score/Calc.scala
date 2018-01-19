@@ -41,10 +41,10 @@ class Calc @Inject()(val marketPrice : MarketPriceService,val marketService : Ma
 	  result
 	}
 
-	def score(coin:String)={
+	def score(coin:String):Future[BuyScore]={
 			val values = marketPrice.lastNBlocks(coin, 18,0);
 			values.map{lst =>
-			(coin,Calc.buyScore(lst))
+			BuyScore(coin,Calc.buyScore(lst))
 			}
 	}
 }
