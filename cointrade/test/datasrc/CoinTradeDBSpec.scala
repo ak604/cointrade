@@ -5,13 +5,26 @@ import org.scalatestplus.play.guice._
 import play.api.test._
 import play.api.test.Helpers._
 import scala.collection.immutable.Range
+import score._
+import org.scalatest._
+import org.scalatest.mockito.MockitoSugar
+import org.mockito.Mockito._
+import org.scalatest.mockito._
+import scala.concurrent._
+import Matchers._
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
+import org.scalatestplus.play.guice._
+import play.api.test._
+import play.api.test.Helpers._
+import scala.collection.immutable.Range
 import models._
 import score._
 import constants._
 
-class CoinTradeDBSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
+class CoinTradeDBSpec extends FlatSpec with MockitoSugar{
  
-  "CoinTradeDBSpec.filterConsecutive" should { "filters only consecutive elements" in {
+  "CoinTradeDBSpec.filterConsecutive" should "filters only consecutive elements" in {
     var lst : List[MarketPrice] = List()
     val interval = AppConstants.granularity
     val rng = Range(5,10).reverse
@@ -24,11 +37,10 @@ class CoinTradeDBSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       expLst = expLst++List(0L+f)
     }
     assert(CoinTradeDB.filterConsecutive(lst,30000+9*interval)== expLst)
-    }
   }
   
   
-  "CoinTradeDBSpec.filterConsecutive" should { "filters out non-cosecutive elements" in {
+ it should "filters out non-cosecutive elements" in {
     var lst : List[MarketPrice] = List()
     val interval = AppConstants.granularity
     val rng = Range(5,10).reverse
@@ -41,10 +53,9 @@ class CoinTradeDBSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     lst=lst.updated(0, new MarketPrice("bitcoin",1,1,99,30000+3*interval+1))
     assert(CoinTradeDB.filterConsecutive(lst,30000+9*300)== List())
     
-    }
   }
   
-   "CoinTradeDBSpec.fillMissingValues" should { "fills missing data" in {
+   it should  "fills missing data" in {
     var lst : List[MarketPrice] = List()
     val interval = AppConstants.granularity
     val rng = Range(5,10).reverse
@@ -52,13 +63,11 @@ class CoinTradeDBSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
       lst = lst++List(new MarketPrice("bitcoin",1,1,f,30000+f*interval))
     }
     
-    assert(CoinTradeDB.fillMissingValues(lst,30000,30000+9*interval)== List(9,8,7,6,5,5,5,5,5,5))
-    }
-    
+    assert(CoinTradeDB.fillMissingValues(lst,30000,30000+9*interval)== List(9,8,7,6,5,5,5,5,5,5))   
   }
   
    
-    "CoinTradeDBSpec.fillMissingValues" should { " ignore extra data" in {
+  it should  " ignore extra data" in {
     var lst : List[MarketPrice] = List()
     val interval =AppConstants.granularity
     val rng = Range(5,10).reverse
@@ -70,8 +79,6 @@ class CoinTradeDBSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
     
     lst=lst.updated(0, new MarketPrice("bitcoin",1,1,99,30000+8*interval+1))
     assert(CoinTradeDB.fillMissingValues(lst,30000,30000+9*300)== List(99,99,7,6,5,5,5,5,5,5))
-    
-    }
   }
   
 }

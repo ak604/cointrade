@@ -54,4 +54,5 @@ class ScoreServiceSpec extends AsyncFlatSpec with MockitoSugar {
       res should be (expectedJson)
     }  
   }
+    
 }
